@@ -7,9 +7,6 @@ NAFE33352_UIOM	shasta( spi, 0 );
 using enum NAFE33352_UIOM::Register16;
 using enum NAFE33352_UIOM::Register24;
 using enum NAFE33352_UIOM::Command;
-using enum NAFE33352_UIOM::DAC::ModeSelect;
-
-#define	VOLTAGE_OUTPUT_SETTING
 
 int main( void )
 {

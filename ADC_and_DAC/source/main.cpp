@@ -21,9 +21,9 @@ int main( void )
 
 	shasta.begin();
 
-	printf( "Part number          = 0x%04X%04X%02\r\n", shasta.reg( PN2 ), shasta.reg( PN1 ), shasta.reg( PN0_REV ) >> 8 );
+	printf( "Part number          = 0x%04X%04X%02X\r\n", shasta.reg( PN2 ), shasta.reg( PN1 ), shasta.reg( PN0_REV ) >> 8 );
 	printf( "Revision             = 0x%02X\r\n", shasta.reg( PN0_REV ) & 0xFF );
-	printf( "Unique serial number = 0x%06X%06X\r\n", shasta.reg( SERIAL1 ), shasta.reg( SERIAL0 ) );
+	printf( "Unique serial number = 0x%06lX%06lX\r\n", shasta.reg( SERIAL1 ), shasta.reg( SERIAL0 ) );
 
 #ifdef	VOLTAGE_OUTPUT_SETTING
 	double	output_value	= 5.00;			//	5V
