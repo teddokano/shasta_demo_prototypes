@@ -11,6 +11,12 @@ using enum NAFE33352_UIOM::Command;
 int main( void )
 {
 	printf( "***** Hello, SHASTA board! *****\r\n" );
+	printf( "\r\n" );
+	printf( "  ##### REQUIRED HARDWARE SETUP #####\r\n" );
+	printf( "  This ample code demonstrates ADC input and DAC output on NAFE33352 UIOM board.\r\n" );
+	printf( "  Connect a wire between pin1(DUT_AO) and pin5(AIP) on J3 terminal block to loopback the voltage output.\r\n" );
+	printf( "  The DAC output voltage can be seen at logical-channel 0on the ADC input.\r\n" );
+	printf( "\r\n" );
 
 	spi.frequency( 1'000'000 );
 	spi.mode( 1 );
@@ -36,20 +42,21 @@ int main( void )
 	shasta.reg( AO_DATA,    output_data << 6 );
 
 	//	check analog input setting data
+	printf( "* readback values from ADC logical channel-0 setting registers\r\n" );
 	shasta.command( CMD_CH0 );
-	printf( "AI_CONFIG0: 0x%04X\r\n", shasta.reg( AI_CONFIG0 ) );
-	printf( "AI_CONFIG1: 0x%04X\r\n", shasta.reg( AI_CONFIG1 ) );
-	printf( "AI_CONFIG2: 0x%04X\r\n", shasta.reg( AI_CONFIG2 ) );
+	printf( "  AI_CONFIG0: 0x%04X\r\n", shasta.reg( AI_CONFIG0 ) );
+	printf( "  AI_CONFIG1: 0x%04X\r\n", shasta.reg( AI_CONFIG1 ) );
+	printf( "  AI_CONFIG2: 0x%04X\r\n", shasta.reg( AI_CONFIG2 ) );
 	printf( "\r\n" );
 
 	//	check analog output setting data
-	shasta.command( CMD_CH0 );
-	printf( "AIO_CONFIG:   0x%04X\r\n",  shasta.reg( AIO_CONFIG   ) );
-	printf( "AO_CAL_COEF:  0x%04X\r\n",  shasta.reg( AO_CAL_COEF  ) );
-	printf( "AIO_PROT_CFG: 0x%04X\r\n",  shasta.reg( AIO_PROT_CFG ) );
-	printf( "AO_SLR_CTRL:  0x%04X\r\n",  shasta.reg( AO_SLR_CTRL  ) );
-	printf( "AO_SYSCFG:    0x%04X\r\n",  shasta.reg( AO_SYSCFG    ) );
-	printf( "AO_DATA:      0x%06lX\r\n", shasta.reg( AO_DATA      ) );
+	printf( "* readback values from DAC (analog output) setting registers\r\n" );
+	printf( "  AIO_CONFIG:   0x%04X\r\n",  shasta.reg( AIO_CONFIG   ) );
+	printf( "  AO_CAL_COEF:  0x%04X\r\n",  shasta.reg( AO_CAL_COEF  ) );
+	printf( "  AIO_PROT_CFG: 0x%04X\r\n",  shasta.reg( AIO_PROT_CFG ) );
+	printf( "  AO_SLR_CTRL:  0x%04X\r\n",  shasta.reg( AO_SLR_CTRL  ) );
+	printf( "  AO_SYSCFG:    0x%04X\r\n",  shasta.reg( AO_SYSCFG    ) );
+	printf( "  AO_DATA:      0x%06lX\r\n", shasta.reg( AO_DATA      ) );
 	printf( "\r\n" );
 
 	int32_t	data;
@@ -57,6 +64,8 @@ int main( void )
 	
 	wait( 1.0 );
 	
+	printf( "* ADC logical channel-0 reading voltage and AIO_STATUS register value\r\n" );
+
 	while ( true )
 	{
 		shasta.command( CMD_SS );

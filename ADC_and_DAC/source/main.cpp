@@ -15,6 +15,29 @@ using enum NAFE33352_UIOM::DAC::ModeSelect;
 int main( void )
 {
 	printf( "***** Hello, SHASTA board! *****\r\n" );
+	printf( "  This sample code demonstrates ADC input and DAC output on NAFE33352 UIOM board.\r\n" );
+	printf( "  On this demo, the ADC logical-channels are configured as following..\r\n" );
+	printf( "     - logical-channel[ 0 ] : Voltage input on AIP and VCM(GND)\r\n" );
+	printf( "     - logical-channel[ 1 ] : Voltage monitoring on VHDD (high-voltage positive supply)\r\n" );
+	printf( "     - logical-channel[ 2 ] : Voltage monitoring on VHSS (high-voltage negative supply)\r\n" );
+	printf( "     - logical-channel[ 3 ] : VSNS voltage\r\n" );
+	printf( "     - logical-channel[ 4 ] : ISNS current\r\n" );
+	printf( "\r\n" );
+	printf( "  The DAC output can be configured voltage output or current output by \"VOLTAGE_OUTPUT_SETTING\" difinition.\r\n" );
+	printf( "  Comment-out \"#define VOLTAGE_OUTPUT_SETTING\" to let the DAC in current mode. \r\n" );
+	printf( "  The DAC output will altered to positive and negative at each measurement interval (+/-5V or +/-20mA).\r\n" );
+	printf( "\r\n" );
+	printf( "\r\n" );
+	printf( "  ##### REQUIRED HARDWARE SETUP FOR VOLTAGE OUTPUT #####\r\n" );
+	printf( "  This sample code demonstrates ADC input and DAC output on NAFE33352 UIOM board.\r\n" );
+	printf( "  CONNECT a wire between pin1(DUT_AO) and pin5(AIP) on J3 terminal block to loopback the voltage output.\r\n" );
+	printf( "  Make sure, UNCONNECT a wire between pin1(GND) and pin5(DUT_AO) on J1 terminal block.\r\n" );
+	printf( "  The DAC output voltage can be seen at logical-channel 0 and 3 on the ADC input.\r\n" );
+	printf( "\r\n" );
+	printf( "  ##### REQUIRED HARDWARE SETUP FOR CURRENT OUTPUT #####\r\n" );
+	printf( "  Make sure CONNECT a wire between pin1(GND) and pin5(DUT_AO) on J1 terminal block to cut current path to AO output to GND.\r\n" );
+	printf( "  The DAC output current can be seen at logical-channel 4 on the ADC input.\r\n" );
+	printf( "\r\n" );
 
 	spi.frequency( 1'000'000 );
 	spi.mode( 1 );
