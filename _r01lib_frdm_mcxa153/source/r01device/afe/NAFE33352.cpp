@@ -186,56 +186,53 @@ void NAFE33352_Base::open_logical_channel( int ch, const uint16_t (&cc)[ 4 ] )
 
 	switch ( mux_setting[ ch ] )
 	{
-		case 0:
-		case 3:
+		case VCM_VCM:
+		case GPIO0_GPIO1:
 			coeff	= (20.00 * 2.50) / (12.5 * pow2_24);
 			break;
-		case 1:
+		case AIP_AIN:
 			coeff	= (20.00 * 2.50) / ((cc[ 0 ] & 0x0100 ? 16.00 : 1.00) * pow2_24);
 			pga_on	= true;
 			break;
-		case 2:
-		case 7:
+		case AIP_VSNS:
+		case VSNS:
 			coeff	= (20.00 * 2.50) / pow2_24;
 			pga_on	= true;
 			break;
-		case 4:
-			coeff	= (20.00 * 2.50) / ((cc[ 0 ] & 0x0200 ? 16.00 : 1.00) * pow2_24);
-			pga_on	= true;
-			break;
-		case 5:
+		case AIP:
+		case AIN:
 			coeff	= (20.00 * 2.50) / ((cc[ 0 ] & 0x0100 ? 16.00 : 1.00) * pow2_24);
 			pga_on	= true;
 			break;
-		case 6:
+		case ISNS:
 			coeff	= (20.00 * 2.50) / (3.7989 * pow2_24);
 			break;
-		case 8:
+		case TIA:
 			coeff	= (20.00 * 2.50) / (2.50 * pow2_24);
 			break;
-		case 9:
-		case 10:
-		case 11:
-		case 15:
-		case 18:
+		case GPIO0_VCM:
+		case VCM_GPIO1:
+		case REF_BYP__VCM:
+		case LDO:
+		case DAC_REF:
 			coeff	= (20.00 * 2.50) / (12.5 * pow2_24) + 1.50;
 			break;
-		case 12:
+		case VCM__REF_BYP:
 			coeff	= (20.00 * 2.50) / (12.5 * pow2_24) - 1.50;
 			break;
-		case 13:
+		case BG:
 			//coeff	= (20.00 * 2.50) / (12.5 * pow2_24) - 1.50;
 			break;
-		case 14:
+		case VADD:
 			coeff	= (2.00 * 20.00 * 2.50) / (12.5 * pow2_24) - 1.50;
 			break;
-		case 16:
-		case 17:
+		case VHDD:
+		case VHSS:
 			coeff	= (40.00 * 20.00 * 2.50) / (12.5 * pow2_24);
 			break;
 	}
 	
-	coeff_uV[ ch ]		= coeff;
+	coeff_V[ ch ]		= coeff;
 	
 	if ( pga_on && !pga_enabled )
 	{

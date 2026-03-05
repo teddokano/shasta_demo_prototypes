@@ -241,7 +241,7 @@ public:
 	 */
 	inline double coeff_mV( int ch )
 	{
-		return coeff_uV[ ch ];
+		return coeff_V[ ch ];
 	}
 	
 	/** Caliculated delay from logical channel setting (for single channel)
@@ -289,7 +289,7 @@ protected:
 	uint8_t			sequence_order[ 16 ];
 	
 	/** Coefficient to convert from ADC read value to micro-volt */
-	double			coeff_uV[ 16 ];
+	double			coeff_V[ 16 ];
 
 	/** Multiplexer setting */
 	int				mux_setting[ 16 ];
@@ -474,7 +474,7 @@ public:
 
 	inline double raw2v( int ch, raw_t value )
 	{
-		double	v	= value * coeff_uV[ ch ];
+		double	v	= value * coeff_V[ ch ];
 
 		if ( HV_MUX != mux_setting[ ch ] )
 		{

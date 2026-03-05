@@ -252,12 +252,12 @@ void NAFE13388_Base::open_logical_channel( int ch, const uint16_t (&cc)[ 4 ] )
 
 	if ( cc[ 0 ] & 0x0010 )
 	{
-		coeff_uV[ ch ]		= ((10.0 / (double)(1L << 24)) / pga_gain[ (cc[ 0 ] >> 5) & 0x7 ]);
+		coeff_V[ ch ]		= ((10.0 / (double)(1L << 24)) / pga_gain[ (cc[ 0 ] >> 5) & 0x7 ]);
 		mux_setting[ ch ]	= HV_MUX;
 	}
 	else
 	{
-		coeff_uV[ ch ]		= ((10.0 / (double)(1L << 24)) / 2.5);
+		coeff_V[ ch ]		= ((10.0 / (double)(1L << 24)) / 2.5);
 		mux_setting[ ch ]	= (cc[ 0 ] >> 1) & 0x7;
 	}
 	

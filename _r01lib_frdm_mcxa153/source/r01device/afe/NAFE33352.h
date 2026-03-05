@@ -162,10 +162,12 @@ public:
 
 	inline double raw2v( int ch, raw_t value )
 	{
-		if ( mux_setting[ ch ] == 13 )
+		if ( mux_setting[ ch ] == ISNS )
+			return	value * coeff_V[ ch ] / on_board_shunt_resister;			
+		else if ( mux_setting[ ch ] == BG )
 			return	value - (double)(1 << 24) * 20.00 * 2.50 / (12.50 * (double)(1 << 24)) -1.50;
 		else
-			return	value * coeff_uV[ ch ];
+			return	value * coeff_V[ ch ];
 	}
 	
 	/** DAC output
@@ -177,6 +179,28 @@ public:
 
 	constexpr static double	pga_gain[]	= { 1.00, 16.00 };
 
+	enum IN_SEL : uint8_t {
+		VCM_VCM		= 0,
+		AIP_AIN,
+		AIP_VSNS,
+		GPIO0_GPIO1,
+		AIP,
+		AIN,
+		ISNS,
+		VSNS,
+		TIA,
+		GPIO0_VCM,
+		VCM_GPIO1,
+		REF_BYP__VCM,
+		VCM__REF_BYP,
+		BG,
+		VADD,
+		LDO,
+		VHDD,
+		VHSS,
+		DAC_REF
+	};
+	
 	enum GainPGA : uint8_t {
 		G_PGA_x_1_0,
 		G_PGA_x16_0,
