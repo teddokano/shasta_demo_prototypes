@@ -6,7 +6,7 @@
  * Generated linker script file for MCXA153
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.30
- * MCUXpresso IDE v25.6 [Build 136] [2025-06-27] on 2026/03/06 8:03:28
+ * MCUXpresso IDE v25.6 [Build 136] [2025-06-27] on 2026/03/06 9:53:07
  */
 
 INCLUDE "ADC_and_DAC_Debug_library.ld"
