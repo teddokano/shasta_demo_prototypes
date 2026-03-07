@@ -57,27 +57,37 @@ void NAFE33352_Base::DAC::configure( const uint16_t (&cc)[ 6 ] )
 
 void NAFE33352_Base::DAC::configure( ModeSelect mode, double full_scale_range )
 {
-	uint16_t	default_dac_setting[ 6 ]	= { 0x6000, 0x1000, 0x87FF, 0x8200, 0xE7FF, 0x0C00 };
+	uint16_t	default_dac_setting[ 6 ]	= { 0x0000, 0x1000, 0x87FF, 0x8200, 0xE7FF, 0x0C00 };
 	
 	output_mode	= mode;
 	
 	switch ( output_mode )
 	{
-		case NAFE33352_Base::DAC::ModeSelect::HI_Z:
+		case NAFE33352_Base::DAC::ModeSelect::OFF:
 			full_scale					= 12.50;
 			default_dac_setting[ 0 ]   |= 0x0002;
 			break;
 		case NAFE33352_Base::DAC::ModeSelect::VOLTAGE:
 			full_scale					= 12.50;
-			default_dac_setting[ 0 ]   |= 0x0040;
+			default_dac_setting[ 0 ]   |= 0x6040;
 			break;
 		case NAFE33352_Base::DAC::ModeSelect::CURRENT:
 			full_scale					= 0.025 / 0.95;
-			default_dac_setting[ 0 ]   |= 0x0061;
+			default_dac_setting[ 0 ]   |= 0x6061;
+			default_dac_setting[ 1 ]   |= 0x1000;
 			break;
 		case NAFE33352_Base::DAC::ModeSelect::CURRENT_RECAL:
 			full_scale					= 0.025;
-			default_dac_setting[ 0 ]   |= 0x0061;
+			default_dac_setting[ 0 ]   |= 0x6061;
+			default_dac_setting[ 1 ]   |= 0x1000;
+			break;
+		case NAFE33352_Base::DAC::ModeSelect::DAC_OFF_VOLTAGE_IN:
+			full_scale					= 0.025;
+			default_dac_setting[ 0 ]   |= 0x6000;
+			break;
+		case NAFE33352_Base::DAC::ModeSelect::DAC_OFF_CURRENT_IN:
+			full_scale					= 0.025;
+			default_dac_setting[ 0 ]   |= 0x7000;
 			break;
 	}
 

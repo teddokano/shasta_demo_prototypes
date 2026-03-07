@@ -10,7 +10,7 @@ using enum NAFE33352_UIOM::Register24;
 using enum NAFE33352_UIOM::Command;
 using enum NAFE33352_UIOM::DAC::ModeSelect;
 
-//#define	VOLTAGE_OUTPUT_SETTING
+//#define	AIO_VOLTAGE_INPUT
 
 int main( void )
 {
@@ -25,23 +25,16 @@ int main( void )
 	printf( "Revision             = 0x%02X\r\n", shasta.reg( PN0_REV ) & 0xFF );
 	printf( "Unique serial number = 0x%06lX%06lX\r\n", shasta.reg( SERIAL1 ), shasta.reg( SERIAL0 ) );
 
-#ifdef	VOLTAGE_OUTPUT_SETTING
-	double	output_value	= 5.00;			//	5V
-
-	shasta.dac.configure( VOLTAGE );
-	shasta.dac	= output_value;
+#ifdef	AIO_VOLTAGE_INPUT
+	shasta.dac.configure( DAC_OFF_VOLTAGE_IN );
 #else
-	double	output_value	= 20 * 1e-3;	//	20mA
-
-	shasta.dac.configure( CURRENT );
-	shasta.dac	= output_value;
+	shasta.dac.configure( DAC_OFF_CURRENT_IN );
 #endif
 
-	shasta.logical_channel[  0 ].configure( 0x0020, 0x50B4, 0x5000 );
-	shasta.logical_channel[  1 ].configure( 0x0080, 0x5064, 0x5000 );
-	shasta.logical_channel[  2 ].configure( 0x0088, 0x5064, 0x5000 );
-	shasta.logical_channel[  3 ].configure( 0x0038, 0x2064, 0x5000 );
-	shasta.logical_channel[  4 ].configure( 0x0030, 0x3064, 0x5000 );
+	shasta.logical_channel[  0 ].configure( 0x0038, 0x2064, 0x5000 );
+	shasta.logical_channel[  1 ].configure( 0x0030, 0x3064, 0x5000 );
+	shasta.logical_channel[  2 ].configure( 0x0080, 0x5064, 0x5000 );
+	shasta.logical_channel[  3 ].configure( 0x0088, 0x5064, 0x5000 );
 
 	printf( "\r\nregister dump: device info:\r\n" );
 	reg_dump( { PN2, PN1, PN0_REV, SERIAL1, SERIAL0, DIE_TEMP }, 1 );
@@ -58,10 +51,9 @@ int main( void )
 	printf( "\r\nregister dump: logical channel info:\r\n" );
 	logical_ch_config_view();
 
-	printf( "\r\n  AIP(SE)[V]      VHDD[V]         VHSS[V]         VSNS[V]         ISNS[A]         AIO_STATUS\r\n" );
+	printf( "\r\n  VSNS[V]         ISNS[A]         VHDD[V]         VHSS[V]         AIO_STATUS\r\n" );
 
 	double	data;
-	auto	count	= 0;;
 
 	while ( true )
 	{
@@ -71,8 +63,6 @@ int main( void )
 			printf( "  %13.9lf,", data );
 		}
 		printf( "    0x%04X\r\n", shasta.reg( AIO_STATUS ) );
-
-		shasta.dac	= output_value * (count++ & 0x1 ? +1.00 : -1.00);
 
 		wait( 1.0 );
 	}

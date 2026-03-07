@@ -62,10 +62,12 @@ public:
 	{
 	public:
 		enum class ModeSelect : uint16_t {
-			HI_Z		= 0,
+			OFF		= 0,
 			VOLTAGE,
 			CURRENT,
-			CURRENT_RECAL
+			CURRENT_RECAL,
+			DAC_OFF_VOLTAGE_IN,
+			DAC_OFF_CURRENT_IN
 		};
 
 		DAC();
