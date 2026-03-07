@@ -44,3 +44,12 @@ The DAC output voltage can be seen at logical-channel 0 and 3 on the ADC input.
 Make sure CONNECT a wire between pin1(GND) and pin5(DUT_AO) on J1 terminal block to cut current path to AO output to GND.  
 The DAC output current can be seen at logical-channel 4 on the ADC input.  
 
+### AIO_input
+This sample code demonstrates make AIO (Analog Input/Output) part to work voltage/current input
+On this demo, the ADC logical-channels are configured as following..  
+   - logical-channel[ 0 ] : Voltage input using VSNS  
+   - logical-channel[ 1 ] : Current input using ISNS with CISW on.    
+   - logical-channel[ 2 ] : Voltage monitoring on VHDD (high-voltage positive supply)  
+   - logical-channel[ 3 ] : Voltage monitoring on VHSS (high-voltage negative supply)  
+
+Apply voltage or current on AO pin and monitor the termial output.  
