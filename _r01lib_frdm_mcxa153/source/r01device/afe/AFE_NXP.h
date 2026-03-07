@@ -206,7 +206,6 @@ public:
 		REF2_VHSS,
 		HV_MUX,
 	};
-
 	
 	/** Convert raw output to micro-volt
 	 *

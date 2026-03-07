@@ -17,7 +17,7 @@ public:
 	using					ch_setting_t	= uint16_t[ 4 ];
 	static constexpr double	on_board_shunt_resister	= 50.00;
 	
-	/** Constructor to create a AFE_base instance */
+	/** Constructor to create a NAFE33352_Base instance */
 	NAFE33352_Base( SPI& spi, bool spi_addr, bool highspeed_variant, int nINT, int DRDY, int SYN, int nRESET, int SYNCDAC );
 
 	/** Destractor */
@@ -32,35 +32,51 @@ public:
 	/** Configure logical channel
 	 *
 	 * @param ch logical channel number (0 ~ 15)
-	 * @param cc0	16bit value to be set CH_CONFIG0 register (0x20)
-	 * @param cc1	16bit value to be set CH_CONFIG1 register (0x21)
-	 * @param cc2	16bit value to be set CH_CONFIG2 register (0x22)
-	 * @param cc3	16bit value to be set CH_CONFIG3 register (0x23)
+	 * @param cc0	16bit value to be set AI_CONFIG0 register (0x20)
+	 * @param cc1	16bit value to be set AI_CONFIG1 register (0x21)
+	 * @param cc2	16bit value to be set AI_CONFIG2 register (0x22)
+	 * @param dummy	dummy variable to keep compatibility over AFE devices
 	 */
 	virtual void open_logical_channel( int ch, uint16_t cc0, uint16_t cc1, uint16_t cc2, uint16_t dummy );
 
 	/** Configure logical channel
 	 *
 	 * @param ch logical channel number (0 ~ 15)
-	 * @param cc array for CH_CONFIG0, CH_CONFIG1, CH_CONFIG2 and CH_CONFIG3 values
+	 * @param cc array for AI_CONFIG0, AI_CONFIG1, AI_CONFIG2 and dummy values
 	 */
 	virtual void open_logical_channel( int ch, const uint16_t (&cc)[ 4 ] );
 
+	/** LogicalChannel sub-class in NAFE33352_Base class */
 	class LogicalChannel : public LogicalChannel_Base
 	{
 	public:
 		LogicalChannel();
 		virtual ~LogicalChannel();
 		
+		/** Configure logical channel
+		 *
+		 * @param cc array for AI_CONFIG0, AI_CONFIG1 and AI_CONFIG2 rgister values
+		 */
 		void	configure( const uint16_t (&cc)[ 3 ] );
+
+		/** Configure logical channel
+		 *
+		 * @param cc0	16bit value to be set AI_CONFIG0 register (0x20)
+		 * @param cc1	16bit value to be set AI_CONFIG1 register (0x21)
+		 * @param cc2	16bit value to be set AI_CONFIG2 register (0x22)
+		 */
 		void	configure( uint16_t cc0, uint16_t cc1 = 0x0000, uint16_t cc2 = 0x0000 );
 	};
 	
+	/** 16 LogicalChannel instance array */
 	LogicalChannel	logical_channel[ 16 ];
 
+	/** DAC sub-class in NAFE33352_Base class */
 	class DAC
 	{
 	public:
+
+		/** DAC default configuration register value set selector */
 		enum class ModeSelect : uint16_t {
 			OFF		= 0,
 			VOLTAGE,
@@ -73,13 +89,49 @@ public:
 		DAC();
 		virtual ~DAC();
 		
+		/** Configure logical channel
+		 *
+		 * @param cc array for AIO_CONFIG, AO_CAL_COEF, AIO_PROT_CFG, AO_SLR_CTRL, AWG_PER and AO_SYSCFG rgister values
+		 */
 		void	configure( const uint16_t (&cc)[ 6 ] );
+
+		/** Configure logical channel
+		 *
+		 * @param cc0	16bit value to be set AIO_CONFIG register (0x20)
+		 * @param cc1	16bit value to be set AO_CAL_COEF register (0x21)
+		 * @param cc2	16bit value to be set AIO_PROT_CFG register (0x22)
+		 * @param cc3	16bit value to be set AO_SLR_CTRL register (0x23)
+		 * @param cc4	16bit value to be set AWG_PER register (0x24)
+		 * @param cc5	16bit value to be set AO_SYSCFG register (0x25)
+		 */
 		void	configure( uint16_t cc0, uint16_t cc1, uint16_t cc2, uint16_t cc3, uint16_t cc4, uint16_t cc5 );
+		
+		/** Configure logical channel
+		 *
+		 * @param mode	ModeSelect selector
+		 * @param full_scale_range	Full scale range modifier. If it meeds to be +/-2.5V, define this variable 2.5. If it is +/-10mA, define it as 0.01. 
+		 */		
 		void	configure( ModeSelect mode, double full_scale_range = 0.00 );
+		
+		/** Configure logical channel
+		 *
+		 * @param full_scale_range	Full scale range modifier. If it meeds to be +/-2.5V, define this variable 2.5. If it is +/-10mA, define it as 0.01. 
+		 */		
 		void 	configure( double full_scale_range );
+		
+		/** Set DAC output
+		 *
+		 * @param value	set value in Volt or Ampere
+		 */		
 		void	output( double value );
+		
+		/** Set DAC output
+		 *
+		 *	shorthand to set DAC output
+		 */				
 		DAC&	operator=( double value );
 		
+		/** pointer to NAFE33352_Base based instance */
 		NAFE33352_Base	*afe_ptr;
 	private:
 		ModeSelect		output_mode;
