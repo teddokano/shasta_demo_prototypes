@@ -10,7 +10,7 @@ using enum NAFE33352_UIOM::Register24;
 using enum NAFE33352_UIOM::Command;
 using enum NAFE33352_UIOM::DAC::ModeSelect;
 
-#define	VOLTAGE_OUTPUT_SETTING
+//#define	VOLTAGE_OUTPUT_SETTING
 
 int main( void )
 {
@@ -56,7 +56,8 @@ int main( void )
 	printf( "\r\nregister dump: logical channel info:\r\n" );
 	logical_ch_config_view();
 
-	printf( "\r\n  AIP(SE)[V]      VHDD[V]         VHSS[V]         VSNS[V]         ISNS[A]         AIO_STATUS\r\n" );
+
+	printf( "\r\n  AIP(SE)[V]      VHDD[V]         VHSS[V]         VSNS[V]         ISNS[A]         AIO_STATUS Temp[deg-C]\r\n" );
 
 	double	data;
 	auto	count	= 0;;
@@ -68,7 +69,8 @@ int main( void )
 			data	= shasta.logical_channel[ i ];
 			printf( "  %13.9lf,", data );
 		}
-		printf( "    0x%04X\r\n", shasta.reg( AIO_STATUS ) );
+		printf( "    0x%04X,", shasta.reg( AIO_STATUS ) );
+		printf( "    %6.1lf\r\n", shasta.temperature() );
 
 		shasta.dac	= output_value * (count++ & 0x1 ? +1.00 : -1.00);
 
