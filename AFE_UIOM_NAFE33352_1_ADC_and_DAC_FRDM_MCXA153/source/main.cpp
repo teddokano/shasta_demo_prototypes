@@ -12,9 +12,11 @@ using enum NAFE33352_UIOM::DAC::ModeSelect;
 
 //#define	VOLTAGE_OUTPUT_SETTING
 
+#define	CURRENT_LOAD_TEST
+
 int main( void )
 {
-	printf( "***** Hello, UIOM board! *****\r\n" );
+ 	printf( "***** Hello, UIOM board! *****\r\n" );
 
 	spi.frequency( 1'000'000 );
 	spi.mode( 1 );
@@ -29,8 +31,9 @@ int main( void )
 	double	output_value	= 5.00;			//	5V
 	shasta.dac.configure( VOLTAGE );
 #else
-	double	output_value	= 20 * 1e-3;	//	20mA
+	double	output_value	= 10 * 1e-3;	//	10mA
 	shasta.dac.configure( CURRENT );
+	shasta.reg( AO_SLR_CTRL, 0x0000 );
 #endif
 
 	shasta.dac	= output_value;
@@ -48,8 +51,8 @@ int main( void )
 	reg_dump( { SYS_CONFIG, SYS_STATUS, CK_SRC_SEL_CONFIG, GLOBAL_ALARM_ENABLE } );
 	
 	printf( "\r\nregister dump: output config:\r\n" );
-	reg_dump( { AIO_CONFIG, AO_CAL_COEF, AIO_PROT_CFG, AO_SLR_CTRL, AWG_PER, AO_SYSCFG, AIO_STATUS } );
-	
+	reg_dump( { AIO_CONFIG, AO_CAL_COEF, AIO_PROT_CFG, AO_SLR_CTRL, AWG_PER, AO_SYSCFG, AIO_STATUS }, 2 );
+
 	printf( "\r\nregister dump: from GAIN_COEF0 to OFFSET_COEF7:\r\n" );
 	reg_dump( GAIN_COEF0, 16 );
 
@@ -60,11 +63,35 @@ int main( void )
 	printf( "\r\n  AIP(SE)[V]      VHDD[V]         VHSS[V]         VSNS[V]         ISNS[A]         AIO_STATUS Temp[deg-C]\r\n" );
 
 	double	data;
-	auto	count	= 0;;
+	auto	count	= 0;
+
+#ifdef CURRENT_LOAD_TEST
+	printf( "\r\n\r\n" );
+	printf( "\r\nIo_setting[mA]    VHDD[V]         VHSS[V]         VSNS[V]         ISNS[A]         AIO_STATUS Temp[deg-C]\r\n" );
+
+	printf( "\r\nregister dump: output config:\r\n" );
+	reg_dump( { AIO_CONFIG, AO_CAL_COEF, AIO_PROT_CFG, AO_SLR_CTRL, AWG_PER, AO_SYSCFG, AIO_STATUS }, 2 );
+
+	if ( 0x7800 != shasta.reg( AIO_STATUS ) )
+	{
+		printf( " ** CMD_AO_ABORT done (1) **\r\n" );
+		shasta.command( CMD_AO_ABORT );
+	}
+
+	printf( "\r\nregister dump: output config:\r\n" );
+	reg_dump( { AIO_CONFIG, AO_CAL_COEF, AIO_PROT_CFG, AO_SLR_CTRL, AWG_PER, AO_SYSCFG, AIO_STATUS }, 2 );
+
+	constexpr double current_setting[]	= { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
+	double	setting;
+
+	setting	= current_setting[ count++ % (sizeof( current_setting ) / sizeof( double )) ];
+	shasta.dac	= setting * 1e-3;
+	printf( "setting=%5.2lf    ", setting );
+#endif
 
 	while ( true )
 	{
-		for ( auto i = 0; i < shasta.enabled_logical_channels(); i++ )
+		for ( auto i = 1; i < shasta.enabled_logical_channels(); i++ )
 		{
 			data	= shasta.logical_channel[ i ];
 			printf( "  %13.9lf,", data );
@@ -72,8 +99,22 @@ int main( void )
 		printf( "    0x%04X,", shasta.reg( AIO_STATUS ) );
 		printf( "    %6.1lf\r\n", shasta.temperature() );
 
-		shasta.dac	= output_value * (count++ & 0x1 ? +1.00 : -1.00);
+		//		shasta.dac	= output_value * (count++ & 0x1 ? +1.00 : -1.00);
+
+#ifdef CURRENT_LOAD_TEST
+
+		if ( 0x7800 != shasta.reg( AIO_STATUS ) )
+		{
+			printf( " ** CMD_AO_ABORT done (2) **\r\n" );
+			shasta.command( CMD_AO_ABORT );
+		}
+
+		setting	= current_setting[ count++ % (sizeof( current_setting ) / sizeof( double )) ];
+		shasta.dac	= setting * 1e-3;
+		printf( "setting=%5.2lf    ", setting );
+#endif
 
 		wait( 1.0 );
 	}
+	printf( "\r\n" );
 }
