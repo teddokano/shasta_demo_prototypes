@@ -5,6 +5,8 @@
 SPI				spi( ARD_MOSI, ARD_MISO, ARD_SCK, ARD_CS );	//	MOSI, MISO, SCLK, CS
 NAFE33352_UIOM	shasta( spi, 0 );
 
+DigitalIn		btn( SW2 );
+
 using enum NAFE33352_UIOM::Register16;
 using enum NAFE33352_UIOM::Register24;
 using enum NAFE33352_UIOM::Command;
@@ -13,6 +15,38 @@ using enum NAFE33352_UIOM::DAC::ModeSelect;
 //#define	VOLTAGE_OUTPUT_SETTING
 
 #define	CURRENT_LOAD_TEST
+
+void setting_in_steps( void )
+{
+	printf( "AIO_CONFIG\r\n" );
+//	while ( btn ); wait( 1 );
+	shasta.reg( AIO_CONFIG, 0x0000 );
+	
+	printf( "AO_CAL_COEF\r\n" );
+//	while ( btn ); wait( 1 );
+	shasta.reg( AO_CAL_COEF, 0x1000 );
+
+	printf( "AIO_PROT_CFG\r\n" );
+//	while ( btn ); wait( 1 );
+	shasta.reg( AIO_PROT_CFG, 0x87FF );
+
+	printf( "AO_SLR_CTRL\r\n" );
+//	while ( btn ); wait( 1 );
+	shasta.reg( AO_SLR_CTRL, 0x8200 );
+
+	printf( "AWG_PER\r\n" );
+//	while ( btn ); wait( 1 );
+	shasta.reg( AWG_PER, 0xE7FF );
+
+	
+	shasta.reg( AO_DATA, 0x3F0000 );
+
+
+	printf( "AO_SYSCFG\r\n" );
+	while ( btn ); wait( 1 );
+	shasta.reg( AO_SYSCFG, 0x0C00 );
+}
+
 
 int main( void )
 {
@@ -32,6 +66,12 @@ int main( void )
 	shasta.dac.configure( VOLTAGE );
 #else
 	double	output_value	= 10 * 1e-3;	//	10mA
+
+	setting_in_steps();
+
+
+
+
 	shasta.dac.configure( CURRENT );
 	shasta.reg( AO_SLR_CTRL, 0x0000 );
 #endif
@@ -82,6 +122,7 @@ int main( void )
 	reg_dump( { AIO_CONFIG, AO_CAL_COEF, AIO_PROT_CFG, AO_SLR_CTRL, AWG_PER, AO_SYSCFG, AIO_STATUS }, 2 );
 
 	constexpr double current_setting[]	= { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
+//	constexpr double current_setting[]	= { 0, 20 };
 	double	setting;
 
 	setting	= current_setting[ count++ % (sizeof( current_setting ) / sizeof( double )) ];
@@ -114,7 +155,7 @@ int main( void )
 		printf( "setting=%5.2lf    ", setting );
 #endif
 
-		wait( 1.0 );
+		wait( 1 );
 	}
 	printf( "\r\n" );
 }
