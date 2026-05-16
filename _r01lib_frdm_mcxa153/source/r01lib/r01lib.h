@@ -1,7 +1,7 @@
 /*
  *  @author Tedd OKANO
  *
- *  Released under the MIT license License
+ *  Released under the MIT license
  */
 
 #ifndef R01LIB_R01LIB_H
@@ -35,6 +35,7 @@ extern "C" {
 #include	"Ticker.h"
 #include	"InterruptIn.h"
 #include	"BusInOut.h"
+#include	"Serial.h"
 #include	"mcu.h"
 
 #endif // R01LIB_R01LIB_H

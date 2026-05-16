@@ -1,7 +1,7 @@
 /*
  *  @author Tedd OKANO
  *
- *  Released under the MIT license License
+ *  Released under the MIT license
  */
 
 #ifndef R01LIB_IO_H
@@ -198,6 +198,9 @@ enum {
 	#define	ARD_MISO	SPI_MISO
 	#define	ARD_SCK		SPI_SCLK
 
+	#define	USBTX		P1_9
+	#define	USBRX		P1_8
+
 	#define	PIN_LED_OFF	true
 	#define	PIN_LED_ON	false
 
@@ -368,6 +371,9 @@ enum {
 	#define	ARD_MISO	SPI_MISO
 	#define	ARD_SCK		SPI_SCLK
 
+	#define	USBTX		P1_9
+	#define	USBRX		P1_8
+
 	#define	PIN_LED_OFF	true
 	#define	PIN_LED_ON	false
 
@@ -512,6 +518,9 @@ enum {
 	#define	ARD_MISO	D12
 	#define	ARD_SCK		D13
 
+	#define	USBTX		P0_3
+	#define	USBRX		P0_2
+
 	#define	PIN_LED_OFF	true
 	#define	PIN_LED_ON	false
 
@@ -627,6 +636,9 @@ enum {
 	#define	ARD_MISO	SPI_MISO
 	#define	ARD_SCK		SPI_SCLK
 
+	#define	USBTX		P0_3
+	#define	USBRX		P0_2
+
 	#define	PIN_LED_OFF	true
 	#define	PIN_LED_ON	false
 
@@ -737,6 +749,9 @@ enum {
 	#define	ARD_MISO	SPI_MISO
 	#define	ARD_SCK		SPI_SCLK
 
+	#define	USBTX		D1
+	#define	USBRX		D0
+
 	#define	PIN_LED_OFF	true
 	#define	PIN_LED_ON	false
 
@@ -769,10 +784,10 @@ enum {
 #define	ARD_A5	A5
 
 /** DigitalInOut class
- *	
+ *
  *  @class DigitalInOut
  *
- *	A class for operating GPIO easy
+ *	A class for easy GPIO pin operations
  */
 
 class DigitalInOut: public Obj
@@ -792,20 +807,20 @@ public:
 
 	/** Create a DigitalInOut instance with specified pins
 	 *
-	 * @param pin_num pin number
-	 * @param direction (option) direction setting
-	 * @param value (option) default value for output
-	 * @param pin_mode (option) PullUp, PullDown, PullNone, OpenDrain
+	 * @param pin_num  pin number
+	 * @param direction (optional) direction setting
+	 * @param value    (optional) default value for output
+	 * @param pin_mode (optional) PullUp, PullDown, PullNone, OpenDrain
 	 */
 	DigitalInOut( uint8_t pin_num, bool direction = kGPIO_DigitalInput, bool value = 0, int pin_mode = PullNone );
 
-	/** Destractor
+	/** Destructor
 	 */
 	virtual ~DigitalInOut();
 	
-	/** Pin output seting
+	/** Pin output setting
 	 *
-	 * @param value setting output
+	 * @param value value to output
 	 */
 	void	value( bool value );
 
@@ -819,7 +834,7 @@ public:
 	 */
 	void	output( void );
 
-	/** Pin direction to set as in
+	/** Pin direction to set as input
 	 */
 	void	input( void );
 
@@ -858,10 +873,10 @@ private:
 };
 
 /** DigitalOut class
- *	
+ *
  *  @class DigitalOut
  *
- *	A class for operating GPIO easy
+ *	A class for easy GPIO output pin operations
  */
 
 class DigitalOut : public DigitalInOut
@@ -871,19 +886,19 @@ public:
 
 	/** Create a DigitalOut instance with specified pins
 	 *
-	 * @param pin_num pin number
-	 * @param value (option) default value for output
-	 * @param pin_mode (option) PullUp, PullDown, PullNone, OpenDrain
+	 * @param pin_num  pin number
+	 * @param value    (optional) default value for output
+	 * @param pin_mode (optional) PullUp, PullDown, PullNone, OpenDrain
 	 */
 	DigitalOut( uint8_t pin_num, bool value = 0, int pin_mode = PullNone );
 	virtual ~DigitalOut();
 };
 
 /** DigitalIn class
- *	
+ *
  *  @class DigitalIn
  *
- *	A class for operating GPIO easy
+ *	A class for easy GPIO input pin operations
  */
 
 class DigitalIn : public DigitalInOut
@@ -893,8 +908,8 @@ public:
 
 	/** Create a DigitalIn instance with specified pins
 	 *
-	 * @param pin_num pin number
-	 * @param pin_mode (option) PullUp, PullDown, PullNone, OpenDrain
+	 * @param pin_num  pin number
+	 * @param pin_mode (optional) PullUp, PullDown, PullNone, OpenDrain
 	 */
 	DigitalIn( uint8_t pin_num, int pin_mode = PullNone );
 	virtual ~DigitalIn();
